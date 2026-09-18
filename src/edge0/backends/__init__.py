@@ -15,7 +15,8 @@ A backend is a directory under ``edge0/backends/<name>/`` exposing:
     ``quant`` — quantized gather kernels (``gather_qmm``)
     ``BackendImpl`` — small object with ``name`` and metadata
 
-The MLX backend is the reference implementation.  A future CUDA backend
+The MLX backend is the reference implementation.  The CUDA backend
+(``backends/cuda/``, PyTorch, work in progress — see CUDA_BACKEND.md)
 implements the same surface with eager semantics; engine / prerouter /
 server / model-adapter code is shared verbatim.  The op list below is the
 contract the framework currently exercises (grow it as models are added).
@@ -49,12 +50,16 @@ if _BACKEND == "mlx":
         quant,
     )
 elif _BACKEND == "cuda":
-    raise ImportError(
-        "the CUDA backend is not implemented yet; set EDGE0_BACKEND=mlx "
-        "(or unset it)")
+    from edge0.backends.cuda.backend import (  # noqa: F401
+        BackendImpl,
+        core,
+        io,
+        nn,
+        quant,
+    )
 else:
     raise ImportError(
-        f"unknown backend {_BACKEND!r}; available: mlx")
+        f"unknown backend {_BACKEND!r}; available: mlx, cuda")
 
 backend = BackendImpl()
 
