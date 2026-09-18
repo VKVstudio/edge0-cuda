@@ -29,18 +29,32 @@ dependencies = [
     # streams become thread-local and the pool-thread builds in
     # edge0/streaming/layer.py fail with "no Stream(gpu, N) in current
     # thread".  mlx-lm stays 0.31.0 (newer releases crash in decode).
-    "mlx==0.30.6",
+    # mlx ships macOS and Linux wheels but none for Windows; gate it so
+    # `pip install -e .` works there too (the CUDA backend does not need
+    # it).  mlx-lm is pure Python but only useful next to mlx.
+    "mlx==0.30.6; sys_platform != 'win32'",
     "mlx-metal==0.30.6; platform_system == 'Darwin'",
-    "mlx-lm==0.31.0",
+    "mlx-lm==0.31.0; sys_platform != 'win32'",
     "numpy>=1.24",
     "safetensors>=0.4",
     "tokenizers>=0.15",
     "psutil>=5.9",
+    # Used directly by the framework (backends/*/io.py load_tokenizer,
+    # engine/ling.py chat template); previously only reached the
+    # environment transitively through mlx-lm.
+    "transformers>=4.40",
+    "jinja2>=3.1",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
+]
+cuda = [
+    # On Linux the PyPI wheel is a CUDA build.  On Windows install torch
+    # first from https://download.pytorch.org/whl/cu128 (the PyPI wheel
+    # there is CPU-only); pip then treats this requirement as satisfied.
+    "torch>=2.5",
 ]
 fetch = [
     "huggingface_hub>=0.23",
