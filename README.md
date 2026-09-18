@@ -18,6 +18,8 @@ English | [中文](README_zh.md)
 
 </div>
 
+> **This fork:** work in progress on a CUDA/PyTorch backend for the reserved `backends/cuda/` slot. What runs, what is blocked and why, and the plan: [CUDA_BACKEND.md](CUDA_BACKEND.md). Upstream: [Edge0-AI/Edge0](https://github.com/Edge0-AI/Edge0).
+
 **edge0** is an open-source streaming MoE inference framework. It
 generalizes the production-proven recipe — **SSD expert offload +
 Recover-LoRA + prerouter routing prediction** — into an extensible
