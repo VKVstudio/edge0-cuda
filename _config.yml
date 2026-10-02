@@ -1,0 +1,3 @@
+# Render the README's Markdown inside its centered HTML header.
+kramdown:
+  parse_block_html: true
